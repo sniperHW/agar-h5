@@ -106,11 +106,19 @@ login.onLoginOK = function() {
 
 	socket.send({cmd:"EnterBattle"});
 
+	var tf = new PIXI.Text("fps:0", {
+				fontFamily: '24px Arial',
+				fill: 0xff1010,
+				align: 'left'
+			});
+	app.stage.addChild(tf);
+
 	var gameLoop = function(delta) {
 		if(!battle.over){
 			battle.updateTick();
 			battle.Update(battle.elapse);
-		}   
+		}
+		tf.text = "fps:"+Math.round(app.ticker.FPS/delta);  
 	}
 
 	//Start the game loop 

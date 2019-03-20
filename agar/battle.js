@@ -29,7 +29,7 @@ battle.init = function(visibleSize,battleSize) {
 	battle.origin = {x:0,y:0}
 
 	battle.centralPos = {x:battle.battleSize.width/2,y:battle.battleSize.height/2}
-	battle.oldCentralPos = {x:battle.centralPos.x,y:battle.centralPos.y}
+		
 	battle.setViewPort(battle.visibleSize.width,battle.visibleSize.height)
 	battle.updateViewPortTopLeft()
 
@@ -50,10 +50,11 @@ battle.init = function(visibleSize,battleSize) {
   	battle.ballContainer = new PIXI.Container();
   	battle.container.addChild(battle.ballContainer);
 
+  	battle.container.addChild(new PIXI.display.Layer(group));
+
   	battle.group = group;
   	app.stage.addChild(this.container);
-	app.stage.addChild(new PIXI.display.Layer(group));
-
+	
 }
 
 battle.addBall = function(newBall) {
@@ -81,8 +82,8 @@ battle.onMouseDown = function(onMouseDown){
 
 
 battle.viewPort2Screen = function(viewPortPos) {
-	viewPortPos.x = viewPortPos.x * battle.scaleFactor + battle.origin.x
-	viewPortPos.y = viewPortPos.y * battle.scaleFactor + battle.origin.y
+	viewPortPos.x = viewPortPos.x * battle.scaleFactor + battle.origin.x;
+	viewPortPos.y = viewPortPos.y * battle.scaleFactor + battle.origin.y;
 	return viewPortPos	
 }
 
@@ -154,7 +155,7 @@ battle.setViewPort = function(width,height) {
 
 battle.UpdateViewPort = function(selfBalls) {
 	if(selfBalls.length == 0) {
-		return
+		return;
 	}
 
     var _edgeMaxX = 0
@@ -203,8 +204,8 @@ battle.UpdateViewPort = function(selfBalls) {
 
     scale = scale / (battle.visibleSize.height / 2)
 
-    var _visionWidth = Math.floor(battle.visibleSize.width * scale)
-    var _visionHeight = Math.floor(battle.visibleSize.height * scale)
+    var _visionWidth = battle.visibleSize.width * scale;
+    var _visionHeight = battle.visibleSize.height * scale;
 
     battle.setViewPort(_visionWidth,_visionHeight);
 
@@ -213,6 +214,7 @@ battle.UpdateViewPort = function(selfBalls) {
 
 
 battle.render = function() {
+	star.render();
 	this.balls.forEach(function (v){
 		var ball_ = v;
 		var viewPortPos = battle.world2ViewPort(ball_.pos);
@@ -223,6 +225,20 @@ battle.render = function() {
 
 		if(battle.isInViewPort(topLeft) || battle.isInViewPort(topRight) || battle.isInViewPort(bottomLeft) || battle.isInViewPort(bottomRight)){
 			var screenPos = battle.viewPort2Screen(viewPortPos);
+
+			if(ball_.userID == battle.userID){
+				var oldx = Math.floor(ball_.circle.x);
+				var oldy = Math.floor(ball_.circle.y);
+
+				var newx = Math.floor(screenPos.x);
+				var newy = Math.floor(screenPos.y);
+
+				if(Math.abs(oldx - newx) > 1 || Math.abs(oldy - newy) > 1){
+					console.log(util.getMilliseconds(), newx,newy,oldx,oldy);
+				}
+			}
+
+
 			ball_.circle.x = screenPos.x;
 			ball_.circle.y = screenPos.y;
 			ball_.circle.visible = true;
@@ -252,12 +268,11 @@ battle.Update = function(elapse) {
 	})
 
     if(ownBallCount > 0) {
-    	battle.centralPos.x = cx/ownBallCount;
-    	battle.centralPos.y = cy/ownBallCount;
-    	battle.UpdateViewPort(selfBalls);
-    	battle.updateViewPortTopLeft();
+	    battle.centralPos.x = cx/ownBallCount;
+	    battle.centralPos.y = cy/ownBallCount;
+	    battle.UpdateViewPort(selfBalls);
+	    battle.updateViewPortTopLeft();
     }
 
     battle.render();
-    star.render();
 }

@@ -23,7 +23,6 @@ message.handler["ServerTick"] = function(event) {
 }
 
 message.handler["BeginSee"] = function(event) {
-	console.log("BeginSee");
 	for(i in event.balls){
 		var color;
 		var thorn = false;

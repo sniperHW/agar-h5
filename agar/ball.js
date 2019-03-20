@@ -2,8 +2,7 @@ var ball = ball || {}
 
 ball.ball = function(userID,ballID,pos,color,r,velocitys,thorn) {
   var circle = new PIXI.Graphics();
-  circle.beginFill(PIXI.utils.rgb2hex([color[0],color[1],color[2]]));
-  console.log(color,thorn);  
+  circle.beginFill(PIXI.utils.rgb2hex([color[0],color[1],color[2]])); 
   if(!thorn){
     circle.drawCircle(0, 0, r);
   } else {
@@ -41,8 +40,6 @@ ball.ball.prototype.updateR = function(){
   if(this.rChange != 0){
     this.r += this.rChange
   }
-  //console.log(this.circle.zOrder);
-  //this.circle.zOrder = this.r;
   var factor = (this.r/this.originR)*battle.scaleFactor;
   this.circle.scale.set(factor,factor);
 }
@@ -91,7 +88,6 @@ ball.ball.prototype.update = function(elapse,topLeft,bottomRight) {
     this.updatePosition(v,elapse,topLeft,bottomRight);
 
   } else if(this.velocitys) {
-    //console.log("velocitys");
     var v = new util.vector2D(0,0);
     for(i in this.velocitys){
       var vv = this.velocitys[i];

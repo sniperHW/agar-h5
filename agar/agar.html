@@ -4,6 +4,7 @@
 <body>
 <script src="../pixi/pixi.min.js"></script>
 <script src="../pixi/PIXI.TextInput.js"></script>
+<script src="../pixi/pixi-layers.js"></script>
 <script src="./util.js"></script>
 <script src="./joystick.js"></script>
 <script src="./ball.js"></script>
@@ -35,6 +36,9 @@ let app = new Application({
 
 //Add the canvas that Pixi automatically created for you to the HTML document
 document.body.appendChild(app.view);
+
+app.stage = new PIXI.display.Stage();
+app.stage.group.enableSort = true;
 
 loader
   .add("images/rocker/plate.png")

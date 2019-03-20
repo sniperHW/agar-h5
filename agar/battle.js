@@ -3,6 +3,11 @@ var battle = battle || {}
 
 battle.init = function(visibleSize,battleSize) {
 
+	var group = new PIXI.display.Group(0, true);
+	group.on('sort', function (circle) {
+    	circle.zOrder = -circle.ball.r;
+	});
+
 	battle.scaleFactor = 1.0;
 	battle.visibleSize = visibleSize;
 	battle.battleSize = battleSize;
@@ -45,12 +50,14 @@ battle.init = function(visibleSize,battleSize) {
   	battle.ballContainer = new PIXI.Container();
   	battle.container.addChild(battle.ballContainer);
 
-
+  	battle.group = group;
   	app.stage.addChild(this.container);
+	app.stage.addChild(new PIXI.display.Layer(group));
 
 }
 
 battle.addBall = function(newBall) {
+	newBall.circle.parentGroup = battle.group;
 	battle.balls.set(newBall.id,newBall);
 	battle.ballContainer.addChild(newBall.circle);
 }

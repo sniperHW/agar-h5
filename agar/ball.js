@@ -11,6 +11,7 @@ ball.ball = function(userID,ballID,pos,color,r,velocitys,thorn) {
   }
   circle.endFill();
   circle.visible = false;
+  circle.ball = this;
   this.id = ballID;
   this.circle = circle;
   this.v = null;

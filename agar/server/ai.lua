@@ -9,7 +9,7 @@ function M.new(battle,aiCount)
 	o = setmetatable(o,AiMgr)
 	o.battle = battle
 	o.robots = {}
-	--[[for i = 1,aiCount do
+	for i = 1,aiCount do
 		local robot = {}
 		robot.user = battleuser.new(nil,i)
 		robot.user.battle = battle
@@ -17,7 +17,7 @@ function M.new(battle,aiCount)
 		battle.users[i] = robot.user
 		robot.nextMove = battle.tickCount
 		o.robots[i] = robot
-	end]]
+	end
 	return o
 end
 

@@ -239,7 +239,7 @@ function visionMgr:updateViewPort(user)
     local _edgeMinY = 1000000
 
 	for k,v in pairs(user.balls) do
-		local R = math.floor(config.Score2R(v.r))
+		local R = math.floor(config.Score2R(v.score))
 		local bottomLeft = {x = v.pos.x - R,y = v.pos.y - R}
 		local topRight = {x = v.pos.x + R,y = v.pos.y + R}
 

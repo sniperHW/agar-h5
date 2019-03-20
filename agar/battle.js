@@ -67,6 +67,7 @@ battle.removeBall = function(ballID) {
 	var ball_ = battle.getBall(ballID);
 	if(ball_) {
 		battle.balls.delete(ballID);
+		ball_.visible = false;
 		battle.ballContainer.removeChild(ball_.circle);
 	}
 }
@@ -204,8 +205,8 @@ battle.UpdateViewPort = function(selfBalls) {
 
     scale = scale / (battle.visibleSize.height / 2);
 
-    var _visionWidth = battle.visibleSize.width * scale;
-    var _visionHeight = battle.visibleSize.height * scale;
+    var _visionWidth = Math.max(battle.visibleSize.width * scale,battle.visibleSize.width);
+    var _visionHeight = Math.max(battle.visibleSize.height * scale,battle.visibleSize.height);
 
     battle.setViewPort(_visionWidth,_visionHeight);
 
@@ -225,20 +226,6 @@ battle.render = function() {
 
 		if(battle.isInViewPort(topLeft) || battle.isInViewPort(topRight) || battle.isInViewPort(bottomLeft) || battle.isInViewPort(bottomRight)){
 			var screenPos = battle.viewPort2Screen(viewPortPos);
-
-			if(ball_.userID == battle.userID){
-				var oldx = Math.floor(ball_.circle.x);
-				var oldy = Math.floor(ball_.circle.y);
-
-				var newx = Math.floor(screenPos.x);
-				var newy = Math.floor(screenPos.y);
-
-				if(Math.abs(oldx - newx) > 1 || Math.abs(oldy - newy) > 1){
-					console.log(util.getMilliseconds(), newx,newy,oldx,oldy);
-				}
-			}
-
-
 			ball_.circle.x = screenPos.x;
 			ball_.circle.y = screenPos.y;
 			ball_.circle.visible = true;

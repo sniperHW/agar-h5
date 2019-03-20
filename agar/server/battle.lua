@@ -119,7 +119,7 @@ function battle:Update()
 	local needSyncBallUpdate
 	local syncElapse
 
-	if self.updateCount % 1 == 0 then
+	if self.updateCount % 2 == 0 then
 		needSyncBallUpdate = true
 		syncElapse = self.tickCount - self.lastSyncBallUpdate
 		self.lastSyncBallUpdate = self.tickCount

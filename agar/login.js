@@ -113,10 +113,24 @@ login.onLoginOK = function() {
 			});
 	app.stage.addChild(tf);
 
+	var gameover = new PIXI.Text("GameOver", {
+				fontFamily: '32px Arial',
+				fill: 0xff1010,
+				align: 'middle'
+			});
+	gameover.anchor.set(0.5,0.5);
+	gameover.x = 1024/2;
+	gameover.y = 768/2;
+	gameover.visible = false;
+	app.stage.addChild(gameover);
+
+
 	var gameLoop = function(delta) {
 		if(!battle.over){
 			battle.updateTick();
 			battle.Update(battle.elapse);
+		}else{
+			gameover.visible = true;
 		}
 		tf.text = "fps:"+Math.round(app.ticker.FPS/delta);  
 	}

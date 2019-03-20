@@ -7,13 +7,13 @@ login.init = function(onLoginClick){
 	padding: '14px',
 	width: '500px',
 	color: '#26272E'
-	}
+	};
 
 	var box_styles = {
 	idle: {fill: 0xE8E9F3, rounded: 16, stroke: {color: 0xCBCEE0, width: 4}},
 	active: {fill: 0xE1E3EE, rounded: 16, stroke: {color: 0xABAFC6, width: 4}},
 	disabled: {fill: 0xDBDBDB, rounded: 16}
-	}
+	};
 
 
 	input = new PIXI.TextInput(input_style,box_styles);
@@ -66,7 +66,7 @@ login.onLoginOK = function() {
 
 	battle.onMouseDown(function(){
 		socket.send({cmd:"Stop"});
-	})
+	});
 
 
 	joystick.createJoystick(resources["images/rocker/plate.png"].texture,
@@ -122,5 +122,5 @@ login.onLoginOK = function() {
 	}
 
 	//Start the game loop 
-	app.ticker.add(delta => gameLoop(delta))
+	app.ticker.add(delta => gameLoop(delta));
 }

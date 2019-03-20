@@ -19,19 +19,19 @@ battle.init = function(visibleSize,battleSize) {
 	battle.viewBounderyBottomRight = {
 		x : battle.battleSize.width + battle.visibleSize.width/2,
 		y : battle.battleSize.height + battle.visibleSize.height/2
-	}
+	};
 
 	battle.viewBounderyTopLeft = {
 		x : 0 - battle.visibleSize.width/2,
 		y : 0 - battle.visibleSize.height/2
-	}
+	};
 
-	battle.origin = {x:0,y:0}
+	battle.origin = {x:0,y:0};
 
-	battle.centralPos = {x:battle.battleSize.width/2,y:battle.battleSize.height/2}
+	battle.centralPos = {x:battle.battleSize.width/2,y:battle.battleSize.height/2};
 		
-	battle.setViewPort(battle.visibleSize.width,battle.visibleSize.height)
-	battle.updateViewPortTopLeft()
+	battle.setViewPort(battle.visibleSize.width,battle.visibleSize.height);
+	battle.updateViewPortTopLeft();
 
 	var background = new PIXI.Graphics();  
   	background.beginFill(0x123456);  
@@ -77,34 +77,34 @@ battle.getBall = function(ballID) {
 
 battle.onMouseDown = function(onMouseDown){
 	battle.background.interactive = true;
-	battle.background.on("mousedown",onMouseDown)
+	battle.background.on("mousedown",onMouseDown);
 }
 
 
 battle.viewPort2Screen = function(viewPortPos) {
 	viewPortPos.x = viewPortPos.x * battle.scaleFactor + battle.origin.x;
 	viewPortPos.y = viewPortPos.y * battle.scaleFactor + battle.origin.y;
-	return viewPortPos	
+	return viewPortPos;
 }
 
 battle.world2ViewPort = function(worldPos) {
 	var vPos = {
 		x : worldPos.x - battle.viewPort.topLeft.x,
 		y : worldPos.y - battle.viewPort.topLeft.y
-	}
-	return vPos
+	};
+	return vPos;
 }
 
 battle.isInViewPort = function(viewPortPos) {
 	if(viewPortPos.x < 0 || viewPortPos.y < 0) {
-		return false
+		return false;
 	}
 
 	if(viewPortPos.x > battle.viewPort.width || viewPortPos.y > battle.viewPort.height) {
-		return false
+		return false;
 	}
 
-	return true
+	return true;
 }
 
 
@@ -123,25 +123,25 @@ battle.updateViewPortTopLeft = function() {
 	var topLeft = {
 		x : battle.centralPos.x - battle.viewPort.width/2,
 		y : battle.centralPos.y - battle.viewPort.height/2
-	}
+	};
 
 	if(topLeft.x < battle.viewBounderyTopLeft.x) {
-		topLeft.x = battle.viewBounderyTopLeft.x
+		topLeft.x = battle.viewBounderyTopLeft.x;
 	}
 
 	if(topLeft.y < battle.viewBounderyTopLeft.y) {
-		topLeft.y = battle.viewBounderyTopLeft.y
+		topLeft.y = battle.viewBounderyTopLeft.y;
 	}
 
 	if(topLeft.x + battle.viewPort.width > battle.viewBounderyBottomRight.x) {
-		topLeft.x = battle.viewBounderyBottomRight.x - battle.viewPort.width
+		topLeft.x = battle.viewBounderyBottomRight.x - battle.viewPort.width;
 	}
 
 	if(topLeft.y + battle.viewPort.height > battle.viewBounderyBottomRight.y) {
-		topLeft.y = battle.viewBounderyBottomRight.y - battle.viewPort.height
+		topLeft.y = battle.viewBounderyBottomRight.y - battle.viewPort.height;
 	}
 
-	battle.viewPort.topLeft = topLeft
+	battle.viewPort.topLeft = topLeft;
 	
 }
 
@@ -158,51 +158,51 @@ battle.UpdateViewPort = function(selfBalls) {
 		return;
 	}
 
-    var _edgeMaxX = 0
-    var _edgeMaxY = 0
-    var _edgeMinX = 1000000
-    var _edgeMinY = 1000000
+    var _edgeMaxX = 0;
+    var _edgeMaxY = 0;
+    var _edgeMinX = 1000000;
+    var _edgeMinY = 1000000;
 
     for(var i=0;i<selfBalls.length;i++){
-    	var ball_ = selfBalls[i]
-    	var r = ball_.r
-    	var topLeft = {x:ball_.pos.x - r,y:ball_.pos.y - r}
-    	var bottomRight = {x:ball_.pos.x + r,y:ball_.pos.y + r}
+    	var ball_ = selfBalls[i];
+    	var r = ball_.r;
+    	var topLeft = {x:ball_.pos.x - r,y:ball_.pos.y - r};
+    	var bottomRight = {x:ball_.pos.x + r,y:ball_.pos.y + r};
 
     	if(_edgeMaxX < bottomRight.x) {
-    		_edgeMaxX = bottomRight.x
+    		_edgeMaxX = bottomRight.x;
     	}
 
     	if(_edgeMaxY < bottomRight.y) {
-    		_edgeMaxY = bottomRight.y
+    		_edgeMaxY = bottomRight.y;
     	}
 
     	if(_edgeMinX > topLeft.x) {
-    		_edgeMinX = topLeft.x
+    		_edgeMinX = topLeft.x;
     	}
 
     	if(_edgeMinY > topLeft.y) {
-    		_edgeMinY = topLeft.y
+    		_edgeMinY = topLeft.y;
     	}
 
     }
 
-    var width = _edgeMaxX - _edgeMinX
-    var height = _edgeMaxY - _edgeMinY
+    var width = _edgeMaxX - _edgeMinX;
+    var height = _edgeMaxY - _edgeMinY;
 
 
     var para = config.screenSizeFactor;
-    var r = Math.max(width,height)
-    r = (r * 0.5) / para
+    var r = Math.max(width,height);
+    r = (r * 0.5) / para;
 
-    var a1 = 8 / Math.sqrt(r)
-    var a2 = Math.max(a1,1.5)
-    var a3 = r * a2
-    var a4 = Math.max(a3,10)
-    var a5 = Math.min(a4,100)
-    var scale = a5 * para
+    var a1 = 8 / Math.sqrt(r);
+    var a2 = Math.max(a1,1.5);
+    var a3 = r * a2;
+    var a4 = Math.max(a3,10);
+    var a5 = Math.min(a4,100);
+    var scale = a5 * para;
 
-    scale = scale / (battle.visibleSize.height / 2)
+    scale = scale / (battle.visibleSize.height / 2);
 
     var _visionWidth = battle.visibleSize.width * scale;
     var _visionHeight = battle.visibleSize.height * scale;

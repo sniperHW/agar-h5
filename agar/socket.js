@@ -1,6 +1,6 @@
 var socket = socket || {}
 
-socket.ws = null
+socket.ws = null;
 
 socket.connect = function(url,onopen,onclose,onmessage) {
     if(socket.ws == null) {

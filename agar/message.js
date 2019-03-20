@@ -1,6 +1,6 @@
-var message = message || {}
+var message = message || {};
 
-message.handler = {}
+message.handler = {};
 
 message.delayMsgQue = new util.fifo();
 

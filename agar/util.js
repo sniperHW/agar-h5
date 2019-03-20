@@ -194,15 +194,3 @@ util.fifo.prototype.first = function() {
 	}
 }
 
-console.log(util.getMilliseconds());
-
-console.log(util.getMilliseconds());
-
-console.log(util.getMilliseconds());
-
-/*
-var vvvvvvv = new util.vector2D(1.5, 0);
-vvvvvvv = vvvvvvv.div(1060/1000);
-
-console.log(vvvvvvv);*/
-

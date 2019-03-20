@@ -38,7 +38,7 @@ ball.createBall = function(userID,ballID,pos,color,r,velocitys,thorn) {
 
 ball.ball.prototype.updateR = function(){
   if(this.rChange != 0){
-    this.r += this.rChange
+    this.r += this.rChange;
   }
   var factor = (this.r/this.originR)*battle.scaleFactor;
   this.circle.scale.set(factor,factor);
@@ -109,7 +109,7 @@ ball.ball.prototype.onBallUpdate = function(msg,ballInfo,timestamp) {
     console.log("not user onBallUpdate");
   }
 
-  this.velocitys = null
+  this.velocitys = null;
   this.targetR = ballInfo.r;
   if(Math.abs(this.targetR - this.r) > 3) {
     //改变超过3个像素需要渐变

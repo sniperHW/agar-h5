@@ -1,0 +1,75 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>agar</title>
+<body>
+<script src="../pixi/pixi.min.js"></script>
+<script src="../pixi/PIXI.TextInput.js"></script>
+<script src="./util.js"></script>
+<script src="./joystick.js"></script>
+<script src="./ball.js"></script>
+<script src="./battle.js"></script>
+<script src="./star.js"></script>
+<script src="./config.js"></script>
+<script src="./login.js"></script>
+<script src="./message.js"></script>
+<script src="./socket.js"></script>
+<script>
+
+//Aliases
+let Application = PIXI.Application,
+    Container = PIXI.Container,
+    loader = PIXI.loader,
+    resources = PIXI.loader.resources,
+    TextureCache = PIXI.utils.TextureCache,
+    Sprite = PIXI.Sprite;
+
+//Create a Pixi Application
+let app = new Application({ 
+    width: 1024, 
+    height: 768,                       
+    antialiasing: true, 
+    transparent: false, 
+    resolution: 1
+  }
+);
+
+//Add the canvas that Pixi automatically created for you to the HTML document
+document.body.appendChild(app.view);
+
+loader
+  .add("images/rocker/plate.png")
+  .add("images/rocker/stick.png")
+  .add("images/spit.png")
+  .add("images/split.png")
+  .load(setup);
+
+function hashCode(str) {
+    var h = 0;
+    var len = str.length;
+    var t = 2147483648;
+    for (var i = 0; i < len; i++) {
+        h = 31 * h + str.charCodeAt(i);
+        if (h > 2147483647) h %= t; //java int溢出则取模
+    }
+    return h;
+}
+
+function setup() {
+  login.init(function (input){
+    if(input!=""){
+      socket.connect("ws://127.0.0.1:8080/echo",function(){
+        console.log("connect ok");
+        battle.userID = 1000+hashCode(input);
+        socket.send({cmd:'Login',userID:battle.userID});
+      });
+    }
+  })
+}
+
+
+</script>
+</body>
+
+
+
+

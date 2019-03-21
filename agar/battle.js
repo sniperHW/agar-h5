@@ -35,12 +35,17 @@ battle.init = function(visibleSize,battleSize) {
 
 	var background = new PIXI.Graphics();  
   	background.beginFill(0x123456);  
-  	background.drawRect(0,0,battle.visibleSize.width,battle.visibleSize.height);  
+  	background.drawRect(0,0,battle.battleSize.width,battle.battleSize.height);  
   	background.endFill();  
   	battle.background = background;
   	battle.balls = new Map();
 
   	battle.container = new PIXI.Container();
+  	battle.container.x = 0;
+  	battle.container.y = 0;
+  	battle.container.width = battleSize.width;
+  	battle.container.height = battleSize.height;
+
   	battle.container.addChild(background);
 
 
@@ -66,9 +71,6 @@ battle.init = function(visibleSize,battleSize) {
 
   	app.stage.addChild(this.container);
 
-
-
-	
 }
 
 battle.addBall = function(newBall) {
@@ -95,34 +97,13 @@ battle.onMouseDown = function(onMouseDown){
 	battle.background.on("mousedown",onMouseDown);
 }
 
-
-battle.viewPort2Screen = function(viewPortPos) {
-	viewPortPos.x = viewPortPos.x * battle.scaleFactor + battle.origin.x;
-	viewPortPos.y = viewPortPos.y * battle.scaleFactor + battle.origin.y;
-	return viewPortPos;
-}
-
-battle.world2ViewPort = function(worldPos) {
+battle.toScreenPos = function(pos) {
 	var vPos = {
-		x : worldPos.x - battle.viewPort.topLeft.x,
-		y : worldPos.y - battle.viewPort.topLeft.y
+		x : pos.x - battle.viewPort.topLeft.x,
+		y : pos.y - battle.viewPort.topLeft.y
 	};
 	return vPos;
 }
-
-/*
-battle.isInViewPort = function(viewPortPos) {
-	if(viewPortPos.x < 0 || viewPortPos.y < 0) {
-		return false;
-	}
-
-	if(viewPortPos.x > battle.viewPort.width || viewPortPos.y > battle.viewPort.height) {
-		return false;
-	}
-
-	return true;
-}
-*/
 
 
 battle.updateTick = function() {
@@ -183,8 +164,8 @@ battle.UpdateViewPort = function(selfBalls) {
     for(var i=0;i<selfBalls.length;i++){
     	var ball_ = selfBalls[i];
     	var r = ball_.r;
-    	var topLeft = {x:ball_.pos.x - r,y:ball_.pos.y - r};
-    	var bottomRight = {x:ball_.pos.x + r,y:ball_.pos.y + r};
+    	var topLeft = {x:ball_.circle.x - r,y:ball_.circle.y - r};
+    	var bottomRight = {x:ball_.circle.x + r,y:ball_.circle.y + r};
 
     	if(_edgeMaxX < bottomRight.x) {
     		_edgeMaxX = bottomRight.x;
@@ -226,37 +207,6 @@ battle.UpdateViewPort = function(selfBalls) {
 
     battle.setViewPort(_visionWidth,_visionHeight);
 
-
-}
-
-
-battle.render = function() {
-	star.render();
-	this.balls.forEach(function (v){
-		var ball_ = v;
-		var viewPortPos = battle.world2ViewPort(ball_.pos);
-		var screenPos = battle.viewPort2Screen(viewPortPos);
-		ball_.circle.x = screenPos.x;
-		ball_.circle.y = screenPos.y;		
-		/*var topLeft = {x:viewPortPos.x - ball_.r , y:viewPortPos.y - ball_.r};
-		var topRight = {x:viewPortPos.x + ball_.r , y:viewPortPos.y - ball_.r};
-		var bottomLeft = {x:viewPortPos.x - ball_.r , y:viewPortPos.y + ball_.r};
-		var bottomRight = {x:viewPortPos.x + ball_.r , y:viewPortPos.y + ball_.r};
-
-		if(battle.isInViewPort(topLeft) || battle.isInViewPort(topRight) || battle.isInViewPort(bottomLeft) || battle.isInViewPort(bottomRight)){
-			var screenPos = battle.viewPort2Screen(viewPortPos);
-			ball_.circle.x = screenPos.x;
-			ball_.circle.y = screenPos.y;
-			ball_.circle.visible = true;
-		} else {
-			ball_.circle.visible = false;
-		}*/
-	})
-
-	var screenPos = battle.viewPort2Screen(battle.world2ViewPort({x:0,y:0}));
-	battle.bound.scale.set(battle.scaleFactor,battle.scaleFactor);
-	battle.bound.x = screenPos.x;
-	battle.bound.y = screenPos.y;
 }
 
 
@@ -271,8 +221,8 @@ battle.Update = function(elapse) {
 		var ball_ = v;
 		if(ball_.userID && ball_.userID == battle.userID){
     		ownBallCount++;
-    		cx += ball_.pos.x;
-    		cy += ball_.pos.y;
+    		cx += ball_.circle.x;
+    		cy += ball_.circle.y;
     		selfBalls[selfBalls.length] = ball_;		
 		}
 		ball_.update(elapse,{x:0,y:0},{x:battle.battleSize.width,y:battle.battleSize.height});
@@ -285,5 +235,8 @@ battle.Update = function(elapse) {
 	    battle.updateViewPortTopLeft();
     }
 
-    battle.render();
+	var screenPos = battle.toScreenPos({x:0,y:0});
+	battle.container.x = screenPos.x*battle.scaleFactor;
+	battle.container.y = screenPos.y*battle.scaleFactor;
+	battle.container.scale.set(battle.scaleFactor,battle.scaleFactor);
 }

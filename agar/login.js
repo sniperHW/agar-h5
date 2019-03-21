@@ -89,8 +89,8 @@ login.onLoginOK = function() {
 	split.anchor.set(0.5,0.5);
 	split.scale.set(0.7,0.7);
 
-	battle.container.addChild(spit);
-	battle.container.addChild(split);
+	app.stage.addChild(spit);
+	app.stage.addChild(split);
 
 	spit.on("mousedown",function(){
 		socket.send({cmd:"Spit",dir:dir});

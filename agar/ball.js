@@ -14,7 +14,12 @@ ball.ball = function(userID,ballID,pos,color,r,velocitys,thorn) {
   this.id = ballID;
   this.circle = circle;
   this.v = null;
-  this.pos = {x:pos.x,y:pos.y};  
+  this.circle.x = pos.x;
+  this.circle.y = pos.y;
+  //this.pos = {x:pos.x,y:pos.y};  
+    
+
+
   this.userID = userID;
   this.r = r;
   this.originR = r;
@@ -40,31 +45,31 @@ ball.ball.prototype.updateR = function(){
   if(this.rChange != 0 && this.rChange != this.targetR){
     this.r += this.rChange;
   }
-  var factor = (this.r/this.originR)*battle.scaleFactor;
+  var factor = (this.r/this.originR);//*battle.scaleFactor;
   this.circle.scale.set(factor,factor);
 }
 
 
 ball.ball.prototype.updatePosition = function(averageV,delta,topLeft,bottomRight) {
-  this.pos.x += averageV.x * delta/1000;
-  this.pos.y += averageV.y * delta/1000;
+  this.circle.x += averageV.x * delta/1000;
+  this.circle.y += averageV.y * delta/1000;
 
   var R = this.r * Math.sin(Math.PI/4);
 
-  if(this.pos.x + R > bottomRight.x){
-    this.pos.x = bottomRight.x - R;
+  if(this.circle.x + R > bottomRight.x){
+    this.circle.x = bottomRight.x - R;
   }
 
-  if(this.pos.y + R > bottomRight.y){
-    this.pos.y = bottomRight.y - R;
+  if(this.circle.y + R > bottomRight.y){
+    this.circle.y = bottomRight.y - R;
   }
 
-  if(this.pos.x - R < topLeft.x){
-    this.pos.x = topLeft.x + R;
+  if(this.circle.x - R < topLeft.x){
+    this.circle.x = topLeft.x + R;
   }
 
-  if(this.pos.y - R < topLeft.y){
-    this.pos.y = topLeft.y + R;
+  if(this.circle.y - R < topLeft.y){
+    this.circle.y = topLeft.y + R;
   }  
 }
 
@@ -127,12 +132,15 @@ ball.ball.prototype.onBallUpdate = function(msg,ballInfo,timestamp) {
     if(this.predictV){
       this.v = new util.velocity(new util.vector2D(this.predictV.x,this.predictV.y));
     }
-    this.pos.x = ballInfo.pos.x;
-    this.pos.y = ballInfo.pos.y;
+    //this.pos.x = ballInfo.pos.x;
+    //this.pos.y = ballInfo.pos.y;
+    this.circle.x = ballInfo.pos.x;
+    this.circle.y = ballInfo.pos.y;
     console.log("拖拽",elapse);
   } else {
     this.predictV = ballInfo.v;
-    var v = new util.vector2D(ballInfo.pos.x - this.pos.x, ballInfo.pos.y - this.pos.y);
+    //var v = new util.vector2D(ballInfo.pos.x - this.pos.x, ballInfo.pos.y - this.pos.y);
+    var v = new util.vector2D(ballInfo.pos.x - this.circle.x, ballInfo.pos.y - this.circle.y);
     v = v.div(elapse/1000);
     this.v = new util.velocity(v,null,null,elapse);
   }

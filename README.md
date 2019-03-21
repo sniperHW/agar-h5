@@ -14,4 +14,4 @@ start server:
 
 run client local:
 
-	[How to run things locally](https://github.com/mrdoob/three.js/wiki/How-to-run-things-locally)
+[How to run things locally](https://github.com/mrdoob/three.js/wiki/How-to-run-things-locally)

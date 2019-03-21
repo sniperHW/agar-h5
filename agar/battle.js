@@ -110,6 +110,7 @@ battle.world2ViewPort = function(worldPos) {
 	return vPos;
 }
 
+/*
 battle.isInViewPort = function(viewPortPos) {
 	if(viewPortPos.x < 0 || viewPortPos.y < 0) {
 		return false;
@@ -121,6 +122,7 @@ battle.isInViewPort = function(viewPortPos) {
 
 	return true;
 }
+*/
 
 
 battle.updateTick = function() {
@@ -233,7 +235,10 @@ battle.render = function() {
 	this.balls.forEach(function (v){
 		var ball_ = v;
 		var viewPortPos = battle.world2ViewPort(ball_.pos);
-		var topLeft = {x:viewPortPos.x - ball_.r , y:viewPortPos.y - ball_.r};
+		var screenPos = battle.viewPort2Screen(viewPortPos);
+		ball_.circle.x = screenPos.x;
+		ball_.circle.y = screenPos.y;		
+		/*var topLeft = {x:viewPortPos.x - ball_.r , y:viewPortPos.y - ball_.r};
 		var topRight = {x:viewPortPos.x + ball_.r , y:viewPortPos.y - ball_.r};
 		var bottomLeft = {x:viewPortPos.x - ball_.r , y:viewPortPos.y + ball_.r};
 		var bottomRight = {x:viewPortPos.x + ball_.r , y:viewPortPos.y + ball_.r};
@@ -245,10 +250,11 @@ battle.render = function() {
 			ball_.circle.visible = true;
 		} else {
 			ball_.circle.visible = false;
-		}
+		}*/
 	})
 
 	var screenPos = battle.viewPort2Screen(battle.world2ViewPort({x:0,y:0}));
+	battle.bound.scale.set(battle.scaleFactor,battle.scaleFactor);
 	battle.bound.x = screenPos.x;
 	battle.bound.y = screenPos.y;
 }

@@ -9,7 +9,7 @@ ball.ball = function(userID,ballID,pos,color,r,velocitys,thorn) {
     circle.drawStar(0, 0, 64, r,r*0.9,0); 
   }
   circle.endFill();
-  circle.visible = false;
+  circle.visible = true;
   circle.ball = this;
   this.id = ballID;
   this.circle = circle;
@@ -37,7 +37,7 @@ ball.createBall = function(userID,ballID,pos,color,r,velocitys,thorn) {
 }
 
 ball.ball.prototype.updateR = function(){
-  if(this.rChange != 0){
+  if(this.rChange != 0 && this.rChange != this.targetR){
     this.r += this.rChange;
   }
   var factor = (this.r/this.originR)*battle.scaleFactor;

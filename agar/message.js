@@ -87,6 +87,7 @@ message.processDelayMsg = function() {
 
 message.DispatchMessage = function(msg) {
 	var cmd = msg.cmd;
+	battle.msgCount++;
 	if(cmd.timestamp) {
 		//将消息延时M.delayTick处理
 		var nowTick = battle.getServerTick();

@@ -26,9 +26,17 @@ scene.init = function(visibleSize,sceneSize) {
 
 	var background = new PIXI.Graphics();  
   	background.beginFill(0x123456);  
-  	background.drawRect(0,0,scene.visibleSize.width,scene.visibleSize.height);  
+  	background.drawRect(0,0,scene.sceneSize.width,scene.sceneSize.height);  
   	background.endFill();  
-  	app.stage.addChild(background);
+
+
+  	var container = new PIXI.Container();
+  	container.x = 0;
+  	container.y = 0
+  	container.width = scene.sceneSize.width;
+  	container.height = scene.sceneSize.height;
+
+  	container.addChild(background);
   	scene.background = background;
 
   	var bound = new PIXI.Graphics();
@@ -36,9 +44,11 @@ scene.init = function(visibleSize,sceneSize) {
 	bound.drawRect(0, 0, scene.sceneSize.width, scene.sceneSize.height);
 	bound.endFill();
 
-	app.stage.addChild(bound);
+	container.addChild(bound);
 	scene.bound = bound;
+	scene.container = container;
 
+	app.stage.addChild(container);
 
 }
 
@@ -47,33 +57,13 @@ scene.onMouseDown = function(onMouseDown){
 	scene.background.on("mousedown",onMouseDown)
 }
 
-
-scene.viewPort2Screen = function(viewPortPos) {
-	viewPortPos.x = viewPortPos.x * scene.scaleFactor + scene.origin.x
-	viewPortPos.y = viewPortPos.y * scene.scaleFactor + scene.origin.y
-	return viewPortPos	
-}
-
-scene.world2ViewPort = function(worldPos) {
+scene.toScreenPos = function(pos) {
 	var vPos = {
-		x : worldPos.x - scene.viewPort.topLeft.x,
-		y : worldPos.y - scene.viewPort.topLeft.y
+		x : pos.x - scene.viewPort.topLeft.x,
+		y : pos.y - scene.viewPort.topLeft.y
 	}
 	return vPos
 }
-
-scene.isInViewPort = function(viewPortPos) {
-	if(viewPortPos.x < 0 || viewPortPos.y < 0) {
-		return false
-	}
-
-	if(viewPortPos.x > scene.viewPort.width || viewPortPos.y > scene.viewPort.height) {
-		return false
-	}
-
-	return true
-}
-
 
 scene.updateViewPortTopLeft = function() {
 	var topLeft = {
@@ -97,8 +87,7 @@ scene.updateViewPortTopLeft = function() {
 		topLeft.y = scene.viewBounderyBottomRight.y - scene.viewPort.height
 	}
 
-	scene.viewPort.topLeft = topLeft
-	
+	scene.viewPort.topLeft = topLeft	
 }
 
 
@@ -122,8 +111,8 @@ scene.UpdateViewPort = function(selfBalls) {
     for(var i=0;i<selfBalls.length;i++){
     	var ball_ = selfBalls[i]
     	var r = ball_.radius
-    	var topLeft = {x:ball_.pos.x - r,y:ball_.pos.y - r}
-    	var bottomRight = {x:ball_.pos.x + r,y:ball_.pos.y + r}
+    	var topLeft = {x:ball_.x - r,y:ball_.y - r}
+    	var bottomRight = {x:ball_.x + r,y:ball_.y + r}
 
     	if(_edgeMaxX < bottomRight.x) {
     		_edgeMaxX = bottomRight.x
@@ -170,29 +159,9 @@ scene.UpdateViewPort = function(selfBalls) {
 
 
 scene.render = function(balls) {
-	for(var i=0;i<balls.length;i++){
-		var ball_ = balls[i]
-		var viewPortPos = scene.world2ViewPort(ball_.pos)
-		var topLeft = {x:viewPortPos.x - ball_.radius , y:viewPortPos.y - ball_.radius}
-		var topRight = {x:viewPortPos.x + ball_.radius , y:viewPortPos.y - ball_.radius}
-		var bottomLeft = {x:viewPortPos.x - ball_.radius , y:viewPortPos.y + ball_.radius}
-		var bottomRight = {x:viewPortPos.x + ball_.radius , y:viewPortPos.y + ball_.radius}
-
-		if(scene.isInViewPort(topLeft) || scene.isInViewPort(topRight) || scene.isInViewPort(bottomLeft) || scene.isInViewPort(bottomRight)){
-			var screenPos = scene.viewPort2Screen(viewPortPos)
-			ball_.x = screenPos.x
-			ball_.y = screenPos.y
-			ball_.visible = true
-		} else {
-			ball_.visible = false
-		}
-	}
-
-
-	var screenPos = scene.viewPort2Screen(scene.world2ViewPort({x:0,y:0}));
-	scene.bound.x = screenPos.x;
-	scene.bound.y = screenPos.y;
-
+	var screenPos = scene.toScreenPos({x:0,y:0});
+	scene.container.x = screenPos.x;
+	scene.container.y = screenPos.y;
 }
 
 
@@ -206,8 +175,8 @@ scene.Update = function(elapse,balls) {
     	if(ball_.isUserBall){
     		ownBallCount++
     		ball.update(ball_,elapse,{x:0,y:0},{x:scene.sceneSize.width,y:scene.sceneSize.height})
-    		cx += ball_.pos.x
-    		cy += ball_.pos.y
+    		cx += ball_.x
+    		cy += ball_.y
     		selfBalls[selfBalls.length] = ball_
     	}
     }

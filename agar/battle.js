@@ -53,7 +53,21 @@ battle.init = function(visibleSize,battleSize) {
   	battle.container.addChild(new PIXI.display.Layer(group));
 
   	battle.group = group;
+
+
+  	var bound = new PIXI.Graphics();
+	bound.lineStyle(1, 0xFEEB77, 1);
+	bound.drawRect(0, 0, battle.battleSize.width, battle.battleSize.height);
+	bound.endFill();
+
+	battle.bound = bound;
+
+	battle.container.addChild(bound);
+
   	app.stage.addChild(this.container);
+
+
+
 	
 }
 
@@ -233,6 +247,10 @@ battle.render = function() {
 			ball_.circle.visible = false;
 		}
 	})
+
+	var screenPos = battle.viewPort2Screen(battle.world2ViewPort({x:0,y:0}));
+	battle.bound.x = screenPos.x;
+	battle.bound.y = screenPos.y;
 }
 
 

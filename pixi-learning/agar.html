@@ -1,0 +1,86 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>agar</title>
+<body>
+<script src="../agar/pixi/pixi.min.js"></script>
+<script src="./util.js"></script>
+<script src="./joystick.js"></script>
+<script src="./ball.js"></script>
+<script src="./scene.js"></script>
+<script>
+
+//Aliases
+let Application = PIXI.Application,
+    Container = PIXI.Container,
+    loader = PIXI.loader,
+    resources = PIXI.loader.resources,
+    TextureCache = PIXI.utils.TextureCache,
+    Sprite = PIXI.Sprite;
+
+//Create a Pixi Application
+let app = new Application({ 
+    width: 1024, 
+    height: 768,                       
+    antialiasing: true, 
+    transparent: false, 
+    resolution: 1
+  }
+);
+
+//Add the canvas that Pixi automatically created for you to the HTML document
+document.body.appendChild(app.view);
+
+loader
+  .add("images/rocker/plate.png")
+  .add("images/rocker/stick.png")
+  .load(setup);
+
+function setup() {
+
+  scene.init({width:1024,height:768},{width:1024*2,height:768*2})
+
+  var balls = new Array()
+
+  for(var i=0;i<1024;i++){
+    var x = Math.floor(Math.random()*10000)%(1024*2)
+    var y = Math.floor(Math.random()*10000)%(768*2)
+    var bb = ball.createBall(app.stage,x,y,1,0x886611)
+    balls[balls.length] = bb
+  }
+
+  var b = ball.createBall(app.stage,1024/2,768/2,32,0x9966FF)
+  b.isUserBall = true
+
+  scene.onMouseDown(function(){
+    b.velocity = new util.velocity(b.v,util.transformV(b.v.getDirAngle(),0),300)
+  })
+
+  balls[balls.length] = b
+
+  joystick.createJoystick(resources["images/rocker/plate.png"].texture,
+    resources["images/rocker/stick.png"].texture,
+    null,
+    null,
+    function(dir){
+    b.velocity = new util.velocity(b.v,util.transformV(dir,10*30),300)
+    }
+  );
+
+
+  var gameLoop = function(delta) {
+    scene.Update(delta,balls)   
+  }
+
+
+  //Start the game loop 
+  app.ticker.add(delta => gameLoop(delta))
+
+}
+
+
+</script>
+</body>
+
+
+
+

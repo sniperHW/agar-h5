@@ -3,21 +3,14 @@ var login = login || {}
 login.init = function(onLoginClick){
 	var input_style = {
 		fontFamily: 'Arial',
-		fontSize: '10pt',
-		padding: '14px',
-		width: '180px',
-		color: '#26272E'
+		fontSize: '14pt',
+		padding: '5px',
+		width: '210px',
+		color: '#E8E9F3'
 	};
 
-	var box_styles = {
-		idle: {fill: 0xE8E9F3, rounded: 16, stroke: {color: 0xCBCEE0, width: 4}},
-		active: {fill: 0xE1E3EE, rounded: 16, stroke: {color: 0xABAFC6, width: 4}},
-		disabled: {fill: 0xDBDBDB, rounded: 16}
-	};
-
-
-	input = new PIXI.TextInput(input_style,box_styles);
-	input.placeholder = 'name';
+	input = new PIXI.TextInput(input_style,{});
+	input.placeholder = '';
 	input.pivot.x = input.width/2;
 	input.pivot.y = input.height/2;
 

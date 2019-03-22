@@ -3,9 +3,9 @@ var login = login || {}
 login.init = function(onLoginClick){
 	var input_style = {
 		fontFamily: 'Arial',
-		fontSize: '25pt',
+		fontSize: '10pt',
 		padding: '14px',
-		width: '500px',
+		width: '180px',
 		color: '#26272E'
 	};
 
@@ -17,35 +17,55 @@ login.init = function(onLoginClick){
 
 
 	input = new PIXI.TextInput(input_style,box_styles);
-	input.placeholder = 'Enter your Text...';
-	input.x = 300;
-	input.y = 300;
+	input.placeholder = 'name';
 	input.pivot.x = input.width/2;
 	input.pivot.y = input.height/2;
 
 
-	var circle = new PIXI.Graphics();
-	circle.beginFill(0x9966FF);
-	circle.drawCircle(0, 0, 32);
-	circle.endFill();
-	circle.x = 700;
-	circle.y = 300;
-	circle.interactive = true;
+	var start = new PIXI.Sprite(resources["images/start.png"].texture);
+	start.anchor.set(0.5,0.5);
+	start.x = app.screen.width/2;
+	start.y = app.screen.height/5*3;
+	start.interactive = true;
 
-	circle.on("mousedown",function(){
+	start.on("mousedown",function(){
+		console.log("login");
 		onLoginClick(input.text);
+		input.visible = false;
 	});	
 
-	var background = new PIXI.Graphics();  
-	background.beginFill(0x123456);  
-	background.drawRect(0,0,1024,768);  
-	background.endFill(); 
-  
+	var background = new PIXI.Sprite(resources["images/back.png"].texture);
+	
+	background.scale.set(app.screen.width/background.width,app.screen.height/background.height);	
+
+	var loginUI = new PIXI.Sprite(resources["images/login.png"].texture);
+	loginUI.anchor.set(0.5,0.5);
+	loginUI.x = app.screen.width/2;
+	loginUI.y = app.screen.height/2;
+
+
+	var name = new PIXI.Sprite(resources["images/editbox.png"].texture);
+	name.anchor.set(0.5,0.5);
+	name.x = app.screen.width/2 + 20;
+	name.y = app.screen.height/2 - 80;
+
+	input.x = name.x;
+	input.y = name.y;
+
+
+	var passwd = new PIXI.Sprite(resources["images/editbox.png"].texture);
+	passwd.anchor.set(0.5,0.5);
+	passwd.x = name.x;
+	passwd.y = name.y + 80; 
+
 	var loginContainer = new PIXI.Container();
 
 	loginContainer.addChild(background);
+	loginContainer.addChild(loginUI);
+	loginContainer.addChild(name);
+	loginContainer.addChild(passwd);
 	loginContainer.addChild(input);
-	loginContainer.addChild(circle);
+	loginContainer.addChild(start);
 
   	app.stage.addChild(loginContainer);
 
@@ -55,10 +75,9 @@ login.init = function(onLoginClick){
 
 login.onLoginOK = function() {
 	console.log("login ok");
-
 	login.container.visible = false;
 
-	battle.init({width:1024,height:768},{width:config.mapWidth,height:config.mapWidth})
+	battle.init({width:app.screen.width,height:app.screen.height},{width:config.mapWidth,height:config.mapWidth})
 
 	battle.onMouseDown(function(){
 		socket.send({cmd:"Stop"});
@@ -79,13 +98,13 @@ login.onLoginOK = function() {
 	spit.interactive = true;
 	split.interactive = true;
 
-	spit.x = 1024 - 1024/5;
-	spit.y = 768/5*4;
+	spit.x = app.screen.width - app.screen.width/5;
+	spit.y = app.screen.height/5*4;
 	spit.anchor.set(0.5,0.5);
 	spit.scale.set(0.7,0.7);
 
-	split.x = 1024 - 1024/14;
-	split.y = 768/5*4;
+	split.x = app.screen.width - app.screen.width/14;
+	split.y = app.screen.height/5*4;
 	split.anchor.set(0.5,0.5);
 	split.scale.set(0.7,0.7);
 
@@ -115,8 +134,8 @@ login.onLoginOK = function() {
 		align: 'middle'
 	});
 	gameover.anchor.set(0.5,0.5);
-	gameover.x = 1024/2;
-	gameover.y = 768/2;
+	gameover.x = app.screen.width/2;
+	gameover.y = app.screen.height/2;
 	gameover.visible = false;
 	app.stage.addChild(gameover);
 
@@ -139,13 +158,14 @@ login.onLoginOK = function() {
 		}else{
 			gameover.visible = true;
 		}
-		tf.text = "fps:"+Math.round(app.ticker.FPS/delta);
+		
 
 		var now = util.getMilliseconds();
 		if(now > refreshTime){
 			msgPerSecond.text = "msg/s:"+battle.msgCount;
 			battle.msgCount = 0;
 			refreshTime = now + 1000;
+			tf.text = "fps:"+Math.round(app.ticker.FPS/delta);
 		}
 	}
 

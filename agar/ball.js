@@ -16,10 +16,6 @@ ball.ball = function(userID,ballID,pos,color,r,velocitys,thorn) {
   this.v = null;
   this.circle.x = pos.x;
   this.circle.y = pos.y;
-  //this.pos = {x:pos.x,y:pos.y};  
-    
-
-
   this.userID = userID;
   this.r = r;
   this.originR = r;
@@ -45,7 +41,7 @@ ball.ball.prototype.updateR = function(){
   if(this.rChange != 0 && this.rChange != this.targetR){
     this.r += this.rChange;
   }
-  var factor = (this.r/this.originR);//*battle.scaleFactor;
+  var factor = (this.r/this.originR);
   this.circle.scale.set(factor,factor);
 }
 
@@ -132,14 +128,11 @@ ball.ball.prototype.onBallUpdate = function(msg,ballInfo,timestamp) {
     if(this.predictV){
       this.v = new util.velocity(new util.vector2D(this.predictV.x,this.predictV.y));
     }
-    //this.pos.x = ballInfo.pos.x;
-    //this.pos.y = ballInfo.pos.y;
     this.circle.x = ballInfo.pos.x;
     this.circle.y = ballInfo.pos.y;
     console.log("拖拽",elapse);
   } else {
     this.predictV = ballInfo.v;
-    //var v = new util.vector2D(ballInfo.pos.x - this.pos.x, ballInfo.pos.y - this.pos.y);
     var v = new util.vector2D(ballInfo.pos.x - this.circle.x, ballInfo.pos.y - this.circle.y);
     v = v.div(elapse/1000);
     this.v = new util.velocity(v,null,null,elapse);

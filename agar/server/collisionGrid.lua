@@ -2,9 +2,6 @@
 local objtype = require("objtype")
 local config = require("config")
 local util = require("util")
-local chuck = require("chuck")
-local log = chuck.log
-local QuadTree = require("QuadTree")
 
 local M = {}
 
@@ -176,4 +173,4 @@ function collisionMgr:CheckCollision(o)
 	end
 end
 
-return
+return M

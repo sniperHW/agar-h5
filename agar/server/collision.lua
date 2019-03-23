@@ -10,6 +10,7 @@ function M.new()
 	local o = {}
 	o = setmetatable(o,collision)
 	o.impl = colliQuadTree.new()
+	--o.impl = colliGrid.new()
 	return o
 end
 

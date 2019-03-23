@@ -113,6 +113,7 @@ function ball:Update(elapse)
 	self:UpdatePosition(self.v,elapse)
 	if self.type ~= objtype.thorn then
 		--如果球的半径和坐标自上次更新碰撞之后都没变更过，就不需要再更新碰撞
+		self.owner.battle.colMgr:Update(self)
 		if self.collR ~= self.r or (not util.point2D.equal(self.collPos,self.pos)) then
 			self.collR = self.r
 			self.collPos = {x = self.pos.x , y = self.pos.y}

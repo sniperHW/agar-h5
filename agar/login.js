@@ -24,6 +24,7 @@ login.init = function(onLoginClick){
 	start.on("mousedown",function(){
 		console.log("login");
 		onLoginClick(input.text);
+		input.text = null
 		input.visible = false;
 	});	
 

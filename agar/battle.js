@@ -99,8 +99,8 @@ battle.onMouseDown = function(onMouseDown){
 
 battle.toScreenPos = function(pos) {
 	var vPos = {
-		x : pos.x - battle.viewPort.topLeft.x,
-		y : pos.y - battle.viewPort.topLeft.y
+		x : (pos.x - battle.viewPort.topLeft.x)*battle.scaleFactor,
+		y : (pos.y - battle.viewPort.topLeft.y)*battle.scaleFactor
 	};
 	return vPos;
 }
@@ -236,7 +236,9 @@ battle.Update = function(elapse) {
     }
 
 	var screenPos = battle.toScreenPos({x:0,y:0});
-	battle.container.x = screenPos.x*battle.scaleFactor;
-	battle.container.y = screenPos.y*battle.scaleFactor;
+	battle.container.x = screenPos.x;
+	battle.container.y = screenPos.y;
 	battle.container.scale.set(battle.scaleFactor,battle.scaleFactor);
+	//剔除不可见的星星
+	star.viewElimination();
 }

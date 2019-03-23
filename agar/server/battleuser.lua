@@ -96,6 +96,7 @@ function battleUser:Update(elapse)
 			self.battle.colMgr:CheckCollision(v)
 		end
 	end
+
 	if self.userID >= 1000 then
 		--目前只有真实玩家使用视野
 		self.battle.visionMgr:UpdateUserVision(self)

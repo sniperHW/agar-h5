@@ -27,6 +27,7 @@ QuadTree.Rect.prototype.width = function() {
 QuadTree.Rect.prototype.intersect = function(other) {
 	var oBottomLeft = {x:other.topLeft.x , y:other.bottomRight.y};
 	var oTopRight = {x:other.bottomRight.x , y:other.topLeft.y};
+
 	if(QuadTree.in_range(this.topLeft,this.bottomRight,oBottomLeft.x,oBottomLeft.y)){
 		return true;
 	}
@@ -45,6 +46,10 @@ QuadTree.Rect.prototype.intersect = function(other) {
 
 	return false;
 }
+
+QuadTree.intersect = function(a,b){
+	return a.intersect(b) || b.intersect(a);
+} 
 
 //返回是否包含other
 QuadTree.Rect.prototype.include = function(other) {
@@ -139,8 +144,7 @@ QuadTree.QuadTree.prototype.insert = function(obj) {
 
 //--获取与rect相交的空间内的所有对象
 QuadTree.QuadTree.prototype.retrive = function(rect,objs) {
-	//console.log(rect);
-	if(!this.rect.intersect(rect)){
+	if(!QuadTree.intersect(this.rect,rect)){
 		return;
 	}
 
@@ -152,6 +156,7 @@ QuadTree.QuadTree.prototype.retrive = function(rect,objs) {
 			}
 		}
 	}
+
 	this.objs.forEach(function (v){
 		objs[objs.length] = v;
 	})
@@ -159,7 +164,7 @@ QuadTree.QuadTree.prototype.retrive = function(rect,objs) {
 
 //--对每个与rect相交的空间内的对象执行func
 QuadTree.QuadTree.prototype.rectCall = function(rect,fn) {
-	if(!this.rect.intersect(rect)){
+	if(!QuadTree.intersect(this.rect,rect)){
 		return;
 	}
 
@@ -170,12 +175,10 @@ QuadTree.QuadTree.prototype.rectCall = function(rect,fn) {
 				node.rectCall(rect,fn);
 			}
 		}
-
-
-		this.objs.forEach(function (v){
-			fn(v);
-		})
 	}
+	this.objs.forEach(function (v){
+		fn(v);
+	})
 }
 
 QuadTree.QuadTree.prototype.remove = function(obj) {
@@ -218,4 +221,3 @@ QuadTree.QuadTree.prototype.update = function(obj) {
 QuadTree.new = function(rect) {
 	return new QuadTree.QuadTree(0,rect,1);
 }
-

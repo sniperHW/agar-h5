@@ -49,6 +49,10 @@ function Rect:intersect(other)
 
 end
 
+function intersect(a,b) 
+	return a:intersect(b) or b:intersect(a)
+end
+
 --返回与other是否完全被包含
 function Rect:include(other)
 	local oTopLeft = {x = other.topRight.x - other:width(),y = other.topRight.y}
@@ -171,7 +175,7 @@ end
 
 --获取与rect相交的空间内的所有对象
 function QuadTree:retrive(rect,objs)
-	if not self.rect:intersect(rect) then
+	if not intersect(self.rect,rect) then
 		return
 	end
 
@@ -189,7 +193,7 @@ end
 
 --对每个与rect相交的空间内的对象执行func
 function QuadTree:rectCall(rect,func)
-	if not self.rect:intersect(rect) then
+	if not intersect(self.rect,rect) then
 		return
 	end
 

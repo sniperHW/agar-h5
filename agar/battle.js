@@ -117,6 +117,35 @@ battle.getServerTick = function() {
 	return battle.gameTick;	
 }
 
+battle.isInViewPort = function(x,y) {
+	if(x < battle.viewPort.topLeft.x || y < battle.viewPort.topLeft.y){
+		return false;
+	}
+
+	if(x > battle.viewPort.topLeft.x + battle.viewPort.width || y > battle.viewPort.topLeft.y + battle.viewPort.height) {
+		return false;
+	}
+
+	return true;
+}
+
+battle.isInScreen = function(x,y) {
+	var screenPos = battle.toScreenPos({x:x,y:y});
+	if(screenPos.x < 0 || 
+	   screenPos.y < 0 ||
+	   screenPos.x > battle.visibleSize.width ||
+	   screenPos.y > battle.visibleSize.height)	
+	{
+		return false;
+	} else{
+		return true;
+	}
+}
+
+battle.getViewPortRect = function() {
+	return new QuadTree.Rect(battle.viewPort.topLeft.x,battle.viewPort.topLeft.y,battle.viewPort.topLeft.x + battle.viewPort.width,battle.viewPort.topLeft.y + battle.viewPort.height);
+}
+
 battle.updateViewPortTopLeft = function() {
 	var topLeft = {
 		x : battle.centralPos.x - battle.viewPort.width/2,
@@ -240,5 +269,5 @@ battle.Update = function(elapse) {
 	battle.container.y = screenPos.y;
 	battle.container.scale.set(battle.scaleFactor,battle.scaleFactor);
 	//剔除不可见的星星
-	star.viewElimination();
+	star.update();
 }

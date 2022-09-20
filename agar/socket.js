@@ -12,9 +12,10 @@ socket.connect = function(url,onopen,onclose,onmessage) {
             socket.ws.onmessage = onmessage;
         }else{
             socket.ws.onmessage = function(evt) {
-                var msg = JSON.parse(evt.data);
-                //console.log(msg)
-                message.DispatchMessage(msg); 
+                evt.data.text().then(packet=> {
+                    var msg = JSON.parse(packet);
+                    message.DispatchMessage(msg);
+                })
             }
         }
     }

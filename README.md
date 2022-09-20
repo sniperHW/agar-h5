@@ -10,7 +10,8 @@ build:
 start server:
 
 	lua agar/server/server.lua
-	go run agar/server/gateway.go
+	cd agar/server/gateway
+	go run .
 
 run client local:
 

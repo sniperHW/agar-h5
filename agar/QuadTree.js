@@ -132,12 +132,27 @@ QuadTree.QuadTree.prototype.insert = function(obj) {
 	if(subTree) {
 		return subTree.insert(obj);
 	} else {
-		if(this.obj_count + 1 > QuadTree.maxObjs && this.level < QuadTree.maxLevel && !this.nodes) {
-			this.split();
-		}
 		obj.tree = this;
 		this.objs.set(obj,obj);
 		this.obj_count++;
+
+		if(this.obj_count > QuadTree.maxObjs && this.level < QuadTree.maxLevel && !this.nodes) {
+			this.split();
+			var objs = this.objs;
+			this.obj_count = 0;
+			this.objs = new Map();
+
+			objs.forEach(function (v){
+				var subTree = this.getSubTree(v.rect);
+				if(subTree) {
+					v.tree = nil;
+					subTree.insert(v);
+				} else {
+					this.objs.set(v,v);
+					this.obj_count++;
+				}
+			})
+		}
 		return true;
 	}
 }

@@ -62,13 +62,20 @@ ball.updatePosition = function(b,averageV,delta,topLeft,bottomRight) {
 }
 
 ball.update = function(b,delta,topLeft,bottomRight) {
-  delta = Math.round(app.ticker.elapsedMS)
-  if(b.velocity){
-    b.v = b.velocity.update(delta)
-    if(b.v.mag() != 0){
-      ball.updatePosition(b,b.v,delta,topLeft,bottomRight)
-    }else{
-      b.velocity = null
+  if(b.isUserBall){
+    delta = Math.round(app.ticker.elapsedMS)
+    if(b.velocity){
+      b.v = b.velocity.update(delta)
+      if(b.v.mag() != 0){
+        ball.updatePosition(b,b.v,delta,topLeft,bottomRight)
+      }else{
+        b.velocity = null
+      }
     }
+    b.path.add(new util.point2D(b.x,b.y))
+  } else { 
+    var point = b.path.get(b.index)
+    b.x = point.x
+    b.y = point.y
   }
 }

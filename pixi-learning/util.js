@@ -1,6 +1,28 @@
 
 var util = util || {}
 
+
+util.path = function(length,point) {
+	this.path = new Array()
+	for(var i=0;i<length;i++){
+		this.path[i] = point
+	}
+	this.head = 0
+}
+
+util.path.prototype.add = function(point) {
+	tail = Math.abs((this.head-this.path.length) % this.path.length)
+	this.path[tail] = point
+	//console.log(tail)
+	this.head = (this.head + 1) % this.path.length
+}
+
+
+util.path.prototype.get = function(index) {
+	var p = this.path[(this.head + index) % this.path.length]
+	return p
+}
+
 util.point2D = function(x,y) {
 	this.x = x;
 	this.y = y;

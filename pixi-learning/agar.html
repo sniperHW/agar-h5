@@ -36,6 +36,7 @@ loader
   .load(setup);
 
 function setup() {
+  console.log("hello")
 
   scene.init({width:1024,height:768},{width:1024*2,height:768*2})
 
@@ -48,14 +49,29 @@ function setup() {
     balls[balls.length] = bb
   }
 
-  var b = ball.createBall(app.stage,1024*2/2,768*2/2,32,0x9966FF)
+  var tailCount = 50
+
+
+  var path = new util.path(tailCount,new util.point2D(1024*2/2,768*2/2))
+
+  var b = ball.createBall(app.stage,1024*2/2,768*2/2,16,0x9966FF)
   b.isUserBall = true
+  b.path = path
+  balls[balls.length] = b
 
   scene.onMouseDown(function(){
     b.velocity = new util.velocity(b.v,util.transformV(b.v.getDirAngle(),0),300)
   })
 
-  balls[balls.length] = b
+
+  for (var i=0;i<tailCount;i++){
+    var bb = ball.createBall(app.stage,1024*2/2,768*2/2,16,0x9966FF)
+    bb.index = i
+    bb.path = path
+    balls[balls.length] = bb
+  }
+
+  console.log(balls.length)
 
   joystick.createJoystick(resources["images/rocker/plate.png"].texture,
     resources["images/rocker/stick.png"].texture,
@@ -68,6 +84,7 @@ function setup() {
 
 
   var gameLoop = function(delta) {
+    //console.log(delta)
     scene.Update(delta,balls)   
   }
 

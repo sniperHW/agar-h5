@@ -4,22 +4,22 @@ var util = util || {}
 
 util.path = function(length,point) {
 	this.path = new Array()
-	for(var i=0;i<length;i++){
+	for(var i=0;i<length+10;i++){
 		this.path[i] = point
 	}
 	this.head = 0
+	this.tail = (this.head + 10) % this.path.length
 }
 
 util.path.prototype.add = function(point) {
-	tail = Math.abs((this.head-this.path.length) % this.path.length)
-	this.path[tail] = point
-	//console.log(tail)
-	this.head = (this.head + 1) % this.path.length
+	this.path[this.tail] = point
+	this.tail = (this.tail + 1) % this.path.length
 }
 
 
-util.path.prototype.get = function(index) {
-	var p = this.path[(this.head + index) % this.path.length]
+util.path.prototype.get = function() {
+	var p = this.path[this.head]
+	this.head = (this.head + 1) % this.path.length
 	return p
 }
 

@@ -172,19 +172,15 @@ scene.Update = function(elapse,balls) {
 	var selfBalls = new Array()
 	var cx = 0
 	var cy = 0	
-	//console.log(balls.length)
     for(var i=0;i<balls.length;i++){
     	var ball_ = balls[i]
-		//console.log("here")
     	if(ball_.isUserBall){
     		ownBallCount++
     		ball.update(ball_,elapse,{x:0,y:0},{x:scene.sceneSize.width,y:scene.sceneSize.height})
     		cx += ball_.x
     		cy += ball_.y
     		selfBalls[selfBalls.length] = ball_
-    	} else if (typeof(ball_.path) != "undefined") {
-			ball.update(ball_,elapse,{x:0,y:0},{x:scene.sceneSize.width,y:scene.sceneSize.height})
-		}
+    	}
     }
 
     if(ownBallCount > 0) {

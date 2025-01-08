@@ -49,15 +49,17 @@ function setup() {
     balls[balls.length] = bb
   }
 
-  var tailCount = 50
+  var tailCount = 10
 
 
-  var path = new util.path(tailCount,new util.point2D(1024*2/2,768*2/2))
+  //var path = new util.path(tailCount,new util.point2D(1024*2/2,768*2/2))
 
   var b = ball.createBall(app.stage,1024*2/2,768*2/2,16,0x9966FF)
   b.isUserBall = true
-  b.path = path
+  b.inPutPath = new util.path(tailCount,new util.point2D(1024*2/2,768*2/2))
   balls[balls.length] = b
+
+  var parent = b
 
   scene.onMouseDown(function(){
     b.velocity = new util.velocity(b.v,util.transformV(b.v.getDirAngle(),0),300)
@@ -66,12 +68,12 @@ function setup() {
 
   for (var i=0;i<tailCount;i++){
     var bb = ball.createBall(app.stage,1024*2/2,768*2/2,16,0x9966FF)
-    bb.index = i
-    bb.path = path
-    balls[balls.length] = bb
+    bb.inPutPath = new util.path(tailCount,new util.point2D(1024*2/2,768*2/2)) 
+    bb.followPath = parent.inPutPath
+    bb.path =  bb.inPutPath
+    parent.next = bb
+    parent = bb
   }
-
-  console.log(balls.length)
 
   joystick.createJoystick(resources["images/rocker/plate.png"].texture,
     resources["images/rocker/stick.png"].texture,

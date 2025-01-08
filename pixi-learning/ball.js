@@ -67,15 +67,20 @@ ball.update = function(b,delta,topLeft,bottomRight) {
     if(b.velocity){
       b.v = b.velocity.update(delta)
       if(b.v.mag() != 0){
-        ball.updatePosition(b,b.v,delta,topLeft,bottomRight)
+        ball.updatePosition(b,b.v,delta,topLeft,bottomRight)        
       }else{
         b.velocity = null
       }
     }
-    b.path.add(new util.point2D(b.x,b.y))
-  } else { 
-    var point = b.path.get(b.index)
-    b.x = point.x
-    b.y = point.y
+    b.inPutPath.add(new util.point2D(b.x,b.y))
+    
+    var next = b.next
+    while(next){
+      var point = next.followPath.get()
+      next.x = point.x
+      next.y = point.y
+      next.inPutPath.add(new util.point2D(next.x,next.y))
+      next = next.next
+    }
   }
 }

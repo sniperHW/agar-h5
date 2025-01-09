@@ -8,6 +8,8 @@ socket.connect = function(url,onopen,onclose,onmessage) {
         socket.ws.onopen = onopen;
         socket.ws.onclose = onclose;
 
+        console.log(message);
+
         if(onmessage){
             socket.ws.onmessage = onmessage;
         }else{
@@ -24,7 +26,7 @@ socket.connect = function(url,onopen,onclose,onmessage) {
 socket.close = function() {
     if(socket.ws) {
         var ws = socket.ws;
-        socket.ws = nil;
+        socket.ws = null;
         ws.close();
     }
 }

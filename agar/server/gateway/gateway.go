@@ -3,12 +3,15 @@ package main
 import (
 	"encoding/binary"
 	"errors"
+
 	//"github.com/golang/protobuf/proto"
-	gorilla "github.com/gorilla/websocket"
-	"github.com/sniperHW/network"
 	"log"
 	"net"
 	"net/http"
+
+	gorilla "github.com/gorilla/websocket"
+	"github.com/sniperHW/netgo"
+
 	//"net/url"
 	//"sync/atomic"
 	//"testing"
@@ -21,7 +24,7 @@ type PacketReceiver struct {
 	buff []byte
 }
 
-func (r *PacketReceiver) read(readable network.ReadAble, deadline time.Time) (n int, err error) {
+func (r *PacketReceiver) read(readable netgo.ReadAble, deadline time.Time) (n int, err error) {
 	if deadline.IsZero() {
 		readable.SetReadDeadline(time.Time{})
 		n, err = readable.Read(r.buff[r.w:])
@@ -32,7 +35,7 @@ func (r *PacketReceiver) read(readable network.ReadAble, deadline time.Time) (n 
 	return
 }
 
-func (r *PacketReceiver) Recv(readable network.ReadAble, deadline time.Time) (pkt []byte, err error) {
+func (r *PacketReceiver) Recv(readable netgo.ReadAble, deadline time.Time) (pkt []byte, err error) {
 	const lenHead int = 4
 	for {
 		rr := r.r
@@ -71,6 +74,7 @@ func (r *PacketReceiver) Recv(readable network.ReadAble, deadline time.Time) (pk
 		if n > 0 {
 			r.w += n
 		}
+		//log.Println("n:", n, "err:", err)
 		if nil != err {
 			return
 		}
@@ -94,6 +98,13 @@ func main() {
 			log.Println(err)
 			return
 		}
+
+		cliConn.SetPingHandler(func(appData string) error {
+			log.Println("WebSocket:on ping")
+			cliConn.WriteMessage(gorilla.PongMessage, []byte(appData))
+			return nil
+		})
+
 		log.Println("on client connect")
 		//connect game
 		dialer := &net.Dialer{}
@@ -104,17 +115,22 @@ func main() {
 			return
 		}
 
-		gameSocket, _ := network.NewTcpSocket(gameConn, &PacketReceiver{buff: make([]byte, 65535)})
-		cliSocket, _ := network.NewWebSocket(cliConn)
+		gameSocket := netgo.NewTcpSocket(gameConn.(*net.TCPConn), &PacketReceiver{buff: make([]byte, 65535)})
+		cliSocket := netgo.NewWebSocket(cliConn)
 
 		go func() {
 			for {
 				packet, err := cliSocket.Recv()
-				//log.Println("on client packet", string(packet))
 				if nil != err {
 					log.Println("cliSocket recv err:", err)
 					break
 				}
+
+				//if len(packet) == 0 {
+				//	continue
+				//}
+
+				log.Println("on client packet", string(packet))
 				buff := make([]byte, 4+len(packet))
 				binary.BigEndian.PutUint32(buff, uint32(len(packet)))
 				copy(buff[4:], packet)
@@ -127,11 +143,11 @@ func main() {
 		go func() {
 			for {
 				packet, err := gameSocket.Recv()
-				//log.Println("on game packet", string(packet))
 				if nil != err {
 					log.Println("gameSocket recv err:", err)
 					break
 				}
+				log.Println("on game packet", string(packet))
 				cliSocket.Send(packet)
 			}
 			cliSocket.Close()

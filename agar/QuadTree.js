@@ -142,14 +142,17 @@ QuadTree.QuadTree.prototype.insert = function(obj) {
 			this.obj_count = 0;
 			this.objs = new Map();
 
+			var o =  this;
+
+
 			objs.forEach(function (v){
-				var subTree = this.getSubTree(v.rect);
+				var subTree = o.getSubTree(v.rect);
 				if(subTree) {
-					v.tree = nil;
+					v.tree = null;
 					subTree.insert(v);
 				} else {
-					this.objs.set(v,v);
-					this.obj_count++;
+					o.objs.set(v,v);
+					o.obj_count++;
 				}
 			})
 		}
